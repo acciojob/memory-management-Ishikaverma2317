@@ -1,0 +1,2 @@
+# Memory Management
+Create a web-based application that dynamically generates and removes DOM elements based on user interactions. Implement a feature that tracks heap memory usage and displays it on the screen. If heap memory usage exceeds a specified limit, alert the user and provide suggestions on how to optimize their actions to reduce memory consumption.
