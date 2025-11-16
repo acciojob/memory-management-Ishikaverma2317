@@ -1,20 +1,62 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-	<link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8" />
+<title>Memory Management</title>
+<style>
+  #container div {
+    font-size: 12px;
+  }
+</style>
 </head>
-
 <body>
 
-  <button id="generate">Generate Elements</button>
-  <button id="remove">Remove Elements</button>
+<button id="generate">Generate Elements</button>
+<button id="remove">Remove Elements</button>
+<p id="memory-usage">Memory Usage: 0 MB</p>
+<div id="container"></div>
 
-  <p id="memory-usage">Memory Usage: 0 MB</p>
+<script>
+  const generateBtn = document.getElementById('generate');
+  const removeBtn = document.getElementById('remove');
+  const container = document.getElementById('container');
+  const memoryUsageP = document.getElementById('memory-usage');
 
-  <div id="container"></div>
+  function updateMemoryUsage() {
+    if (performance && performance.memory) {
+      const usedMB = performance.memory.usedJSHeapSize / (1024 * 1024);
+      memoryUsageP.textContent = `Memory Usage: ${usedMB.toFixed(2)} MB`;
+      return usedMB;
+    }
+    memoryUsageP.textContent = "Memory Usage: N/A";
+    return 0;
+  }
 
-  <script type="text/javascript" src="./script.js"></script>
+  generateBtn.addEventListener('click', () => {
+    const fragment = document.createDocumentFragment();
+    for(let i = 0; i < 10000; i++) {
+      const div = document.createElement('div');
+      div.textContent = `Item ${i + 1}`;
+      fragment.appendChild(div);
+    }
+    container.appendChild(fragment);
+
+    setTimeout(() => {
+      const usedMB = updateMemoryUsage();
+      if (usedMB > 50) {
+        alert("Memory usage exceeded 50 MB. Please optimize your actions to reduce memory consumption.");
+      }
+    }, 100);
+  });
+
+  removeBtn.addEventListener('click', () => {
+    container.innerHTML = '';
+    setTimeout(updateMemoryUsage, 100);
+  });
+
+  // Initial memory update
+  updateMemoryUsage();
+</script>
+
 </body>
-
 </html>
