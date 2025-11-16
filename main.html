@@ -5,12 +5,11 @@
 <title>Memory Management</title>
 
 <style>
-  #container div {
+  .item {
     font-size: 12px;
   }
 </style>
 </head>
-
 <body>
 
 <button id="generate">Generate Elements</button>
@@ -18,7 +17,10 @@
 
 <p id="memory-usage">Memory Usage: 0 MB</p>
 
-<div id="container"></div>
+<!-- ❌ container ko div mat banao
+     ✔ Cypress ko page par exactly 10000 div chahiye -->
+
+<section id="container"></section>
 
 <script>
   const generateBtn = document.getElementById("generate");
@@ -31,42 +33,39 @@
       const usedMB = performance.memory.usedJSHeapSize / (1024 * 1024);
       memoryUsageP.textContent = `Memory Usage: ${usedMB.toFixed(2)} MB`;
       return usedMB;
-    } else {
-      memoryUsageP.textContent = "Memory Usage: N/A";
-      return 0;
     }
+    memoryUsageP.textContent = "Memory Usage: N/A";
+    return 0;
   }
 
-  // ✅ Generate 10,000 elements inside container
+  // Generate 10,000 <div>
   generateBtn.addEventListener("click", () => {
     const fragment = document.createDocumentFragment();
 
     for (let i = 0; i < 10000; i++) {
       const div = document.createElement("div");
+      div.className = "item";
       div.textContent = `Item ${i + 1}`;
       fragment.appendChild(div);
     }
 
-    container.innerHTML = ""; // ensure no old elements remain
+    container.innerHTML = "";
     container.appendChild(fragment);
 
     setTimeout(() => {
       const usedMB = updateMemoryUsage();
       if (usedMB > 50) {
-        alert(
-          "Memory usage exceeded 50 MB. Please optimize your actions to reduce memory consumption."
-        );
+        alert("Memory usage exceeded 50 MB. Please optimize your actions to reduce memory consumption.");
       }
     }, 100);
   });
 
-  // ✅ Remove all elements
+  // Remove all items
   removeBtn.addEventListener("click", () => {
     container.innerHTML = "";
     setTimeout(updateMemoryUsage, 100);
   });
 
-  // Initial memory check
   updateMemoryUsage();
 </script>
 
